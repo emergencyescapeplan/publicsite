@@ -1,4 +1,4 @@
-// Smooth-scroll for anchor links & auto-close mobile menu
+// Burger menu toggle logic with icon switch
 const btn = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.nav-links');
 const icon = btn.querySelector('i');
@@ -9,37 +9,32 @@ function toggleIcon() {
   icon.classList.toggle('fa-times');
 }
 
-document.querySelectorAll('a[href^="#"]').forEach(link =>
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    document.querySelector(link.getAttribute('href'))
-      .scrollIntoView({ behavior: 'smooth' });
-
-    if (nav.classList.contains('open')) {
-      nav.classList.remove('open');
-      toggleIcon();
-    }
-  })
-);
-
-// Mobile menu toggle + icon swap
-btn.addEventListener('click', () => {
+function toggleMenu() {
   nav.classList.toggle('open');
   toggleIcon();
+}
+
+btn.addEventListener('click', toggleMenu);
+
+// Close menu when clicking a nav link
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (nav.classList.contains('open')) {
+      toggleMenu();
+    }
+  });
 });
 
-// Hide header on scroll down, show (beige) on scroll up
+// Hide header on scroll down, show on scroll up
 let lastScroll = 0;
 window.addEventListener('scroll', () => {
   const current = window.pageYOffset || document.documentElement.scrollTop;
 
   if (current > lastScroll && current > 100) {
-    // scrolling down
     header.classList.add('hidden');
   } else {
-    // scrolling up
     header.classList.remove('hidden');
-    header.classList.remove('scrolled'); // ensure beige bg returns
+    header.classList.remove('scrolled');
   }
 
   lastScroll = current <= 0 ? 0 : current;
